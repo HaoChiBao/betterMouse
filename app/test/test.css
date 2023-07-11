@@ -12,6 +12,7 @@
     justify-content: center;
     align-items: center;
 
+    /* starts off the screen */
     top: -1000px;
     left: -1000px;
 
@@ -23,7 +24,9 @@
     border-radius: 100%;
     
     background: radial-gradient(#00000070, #7c7c7c70);
+    /* background: radial-gradient(#7c7c7c70, transparent); */
     backdrop-filter: blur(7px);
+    /* backdrop-filter: invert(70%) blur(7px); */
     /* background-color: antiquewhite; */
 
 }
@@ -62,13 +65,13 @@
     /* radial gradient */
     /* background: radial-gradient(#00000000, #7c7c7cc0); */
     background: radial-gradient(#00000000, rgba(147, 147, 147, 0.753));
-    /* background: radial-gradient(#00000000, rgba(254, 254, 254, 0.753)); */
+    /* background: radial-gradient(rgba(254, 254, 254, 0.753), transparent); */
 
     overflow: hidden;
     
     border-radius:100%; 
 
-    clip-path: polygon(-50% 50%, 50% 50%, 50% -50%);
+    /* clip-path: polygon(-50% 50%, 50% 50%, 50% -50%); */
 }
 
 .mouseModal .wheelContainer .wheelBorder{
@@ -77,10 +80,12 @@
     aspect-ratio: 1/1;
     
     border-radius:100%;
-    clip-path: polygon(-50% 50%, 50% 50%, 50% -50%);
+    /* clip-path: polygon(-50% 50%, 50% 50%, 50% -50%); */
     
     background: radial-gradient(transparent 68%, #8439c79a 68%);
-    /* background-color: black; */
+    background: radial-gradient(transparent 68%, #50b1a4c4 68%);
+    
+    /* background: radial-gradient(transparent 68%, #757575 68%); */
     
 }
 
@@ -92,7 +97,7 @@
 
     aspect-ratio: 1/1;
     position: absolute;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius:100%;
     /* clip-path: polygon(-50% 50%, 50% 50%, 50% -50%); */
     /* border-top-left-radius: 100%; */

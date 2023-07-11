@@ -31,7 +31,26 @@ class MouseWheel{
     // variable for the current active slice
     userSettings = {
         staticBorders: false,
+
+        invertBackground: true,
+
         modalSize: 300,
+
+
+        triggerEvents: [
+            // N number of events (parallel array to this.wheelPieces)
+
+            // stored as data: and action: 
+            /* 
+            {
+                data: 'spray' 
+                action: () => {
+                    
+                }
+            }
+            
+            */
+        ]
     }
 
     constructor(numSlices) {
@@ -40,7 +59,7 @@ class MouseWheel{
         this.numSlices = numSlices
         try {
 
-            this.mouseModal = MouseWheel.createMouseModal(this.userSettings.modalSize)
+            this.mouseModal = MouseWheel.createMouseModal(this.userSettings)
             
             this.offsetRotate =  0 - (this.MAX_DEGREES / (this.numSlices * 2) + 90)
 
@@ -153,6 +172,9 @@ class MouseWheel{
 
     triggerWheelEvent = (elementNum) => {
         console.log('triggering:',elementNum)
+
+        // this is for copying into an element
+        const activeElement = document.activeElement
     }
     
     static getCircleXY = (degree) => {
@@ -179,11 +201,14 @@ class MouseWheel{
         return {x: x, y: y}
     }
 
-    static createMouseModal = (size) => {
+    static createMouseModal = (settings) => {
         
         const mouseModal = document.createElement('div')
         mouseModal.className = 'mouseModal'
-        mouseModal.style.width = `${size}px`
+        mouseModal.style.width = `${settings.modalSize}px`
+
+        if(settings.invertBackground) mouseModal.style.backdropFilter = 'invert(80%) blur(7px)'
+    
         
         const wheelNose = document.createElement('div')
         wheelNose.className = 'wheelNose'
@@ -468,7 +493,7 @@ class MouseWheel{
     }
 }
 
-const test_slices = 3
+const test_slices = 2
 
 const mouseWheel = new MouseWheel(test_slices)
 console.log(mouseWheel)
