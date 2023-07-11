@@ -27,6 +27,11 @@ class MouseWheel{
         activationKey: 'Control',
     }
 
+    // variable for the current active slice
+    userSettings = {
+        staticBorders: false,
+    }
+
 
 
     constructor(numSlices) {
@@ -104,7 +109,7 @@ class MouseWheel{
 
                     const slope = MouseWheel.slopeFromTwoPoints(wheelPoints, mousePoints)
                     const quadrant = MouseWheel.quadrantFromTwoPoints(wheelPoints, mousePoints)
-                    const angle = MouseWheel.angleFromSlope(slope, quadrant)
+                    const angle = MouseWheel.angleFromSlope(slope, quadrant) - this.offsetRotate
 
                     const distance = MouseWheel.distanceBetweenTwoPoints(wheelPoints, mousePoints)
 
@@ -112,11 +117,17 @@ class MouseWheel{
                     // console.log(distance)
                     const wheelSlice = this.getSliceInAngle(angle)
 
-                    console.log(wheelSlice)
+                    // console.log(wheelSlice)
                     // console.log(angle, quadrant)
 
                     if(wheelSlice != null && distance > this.#activationDistance) {
                         this.activateSlice(wheelSlice.id)
+
+                        if(!this.userSettings.staticBorders) {
+                            const borderSlice = this.mouseModal.querySelector('.wheelContainer .wheelBorder')
+                            borderSlice.style.opacity = 1
+                            borderSlice.style.transform = `rotate(${angle + this.offsetRotate + 90}deg)`
+                        }
                     }
                 }
             })
@@ -218,13 +229,13 @@ class MouseWheel{
     }
 
     getSliceInAngle = (angle) => {
-        angle =  (angle-this.offsetRotate) % 360
+        angle =  (angle) % 360
         for(let i = 0; i < this.wheelPieces.length; i++) {
             const wheelPiece = this.wheelPieces[i]
 
             const highend = wheelPiece.rotate + wheelPiece.angle
             const lowend = wheelPiece.rotate
-            console.log(angle, wheelPiece.rotate, wheelPiece.angle)
+            // console.log(angle, wheelPiece.rotate, wheelPiece.angle)
             if(angle < highend && angle > lowend ) {
                 return wheelPiece
             }
@@ -378,7 +389,7 @@ class MouseWheel{
 
         wheelSlice.style.background = 'radial-gradient(#00000000, rgba(254, 254, 254, 0.753))'
         
-        wheelBorder.style.opacity = 1
+        if(this.userSettings.staticBorders) wheelBorder.style.opacity = 1
 
         this.deactivateAllSlices(sliceNum)
     }
