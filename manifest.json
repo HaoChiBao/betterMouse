@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Better Mouse",
+    "description": "squeek",
+    "version": "0.0.1",
+    
+    "permissions": [
+        "scripting",
+        "storage"
+    ],
+    "content_scripts":[{
+        "matches": ["<all_urls>"],
+        "css": ["./app/content.css"],
+        "js": ["./app/content.js"],
+        "run_at": "document_end"
+    }],
+    "host_permissions": ["<all_urls>"],
+    "web_accessible_resources":[{
+        "resources": ["/app/*"],
+        "matches": ["<all_urls>"]
+    }]
+}
