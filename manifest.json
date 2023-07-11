@@ -12,7 +12,7 @@
         "matches": ["<all_urls>"],
         "css": ["./app/background/content.css"],
         "js": ["./app/background/content.js"],
-        "run_at": "document_end"
+        "run_at": "document_start"
     }],
     "host_permissions": ["<all_urls>"],
     "web_accessible_resources":[{
