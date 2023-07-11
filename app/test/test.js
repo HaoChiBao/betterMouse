@@ -13,6 +13,7 @@ class MouseWheel{
     MAX_DEGREES = 360
     SPACE_BETWEEN_SLICES = 1
     numSlices = null
+    currentActiveSlice = null
 
 
     // variable for if the wheel should be active
@@ -32,8 +33,6 @@ class MouseWheel{
         staticBorders: false,
         modalSize: 300,
     }
-
-
 
     constructor(numSlices) {
         console.log('loading mousewheel')
@@ -88,20 +87,31 @@ class MouseWheel{
                     if(this.#state.activationHold) {
                         const mPoints = {x: e.clientX, y: e.clientY}
                         this.setWheelPosition(mPoints.x, mPoints.y)
-                        this.activate()
+                        this.activate(e)
                     }
         
                 }
+
             })
             
             window.addEventListener('mouseup', (e) => {
                 const key = e.button
                 if(key === 0) {
                     this.#state.controlHold = false
+
+                    const wheelPoints = this.getRelativeMidPoint()
+                    const mousePoints = {x: e.clientX, y: e.clientY}
+                    const distance = MouseWheel.distanceBetweenTwoPoints(wheelPoints, mousePoints)
+
+                    if(this.isActive() && distance > this.#activationDistance && this.currentActiveSlice != null) {
+                        this.triggerWheelEvent(this.currentActiveSlice)
+                    }
+
                     this.deactivate()
                 }
             })
             window.addEventListener('mousemove', (e) => {
+                // console.log(this.currentActiveSlice)
                 if(this.isActive()){
                     const wheelPoints = this.getRelativeMidPoint()
                     const mousePoints = {x: e.clientX, y: e.clientY}
@@ -129,6 +139,8 @@ class MouseWheel{
                             borderSlice.style.opacity = 1
                             borderSlice.style.transform = `rotate(${angle + this.offsetRotate + 90}deg)`
                         }
+                    } else if (distance < this.#activationDistance) {
+                        this.deactivateAllSlices()
                     }
                 }
             })
@@ -137,6 +149,10 @@ class MouseWheel{
         loadKeyEvents();loadMouseEvents()
 
         return 0;
+    }
+
+    triggerWheelEvent = (elementNum) => {
+        console.log('triggering:',elementNum)
     }
     
     static getCircleXY = (degree) => {
@@ -381,22 +397,27 @@ class MouseWheel{
     }
 
     activateSlice = (sliceNum) => {
+        
         const sliceInfo = this.getSlice(sliceNum)
-
+        
         const wheelContainer = sliceInfo.wheelPiece
         const children = wheelContainer.children
 
         const wheelBorder = children[0]
         const wheelSlice = children[1]
-
+        
         wheelSlice.style.background = 'radial-gradient(#00000000, rgba(254, 254, 254, 0.753))'
         
         if(this.userSettings.staticBorders) wheelBorder.style.opacity = 1
-
+        
         this.deactivateAllSlices(sliceNum)
+
+        this.currentActiveSlice = sliceNum
     }
     
     deactivateSlice = (sliceNum) => {
+        this.currentActiveSlice = null
+
         const sliceInfo = this.getSlice(sliceNum)
 
         const wheelContainer = sliceInfo.wheelPiece
@@ -422,11 +443,12 @@ class MouseWheel{
     }
 
     // set activate to true
-    activate = () => {
+    activate = (event) => {
         this.#active = true
+        event.preventDefault()
         MouseWheel.rotateElement(this.mouseModal, this.offsetRotate)
     }
-
+    
     // set activate to false and move the mouse modal off screen
     deactivate = () => {
         this.#active = false
